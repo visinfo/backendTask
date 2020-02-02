@@ -4,9 +4,11 @@ import com.heycar.demo.domain.model.Item;
 import com.heycar.demo.domain.model.SearchItem;
 import java.util.List;
 
-public interface InventoryService {
+public interface InventoryRepository {
 
-  void saveItems(List<Item> items, String dealerId);
-  List<Item> fetchItems(SearchItem make);
+
+   void saveItems(List<Item> items, String dealerId);
+   List<Item> fetchItems(SearchItem make);
+
 
 }

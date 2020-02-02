@@ -1,8 +1,11 @@
 package com.heycar.demo.domain;
 
+import static org.mockito.ArgumentMatchers.any;
+
 import com.heycar.demo.domain.exception.BusinessException;
 import com.heycar.demo.domain.model.Item;
-import com.heycar.demo.domain.service.InventoryService;
+import com.heycar.demo.domain.model.SearchItem;
+import com.heycar.demo.domain.service.InventoryRepository;
 import com.heycar.demo.domain.service.InventoryServiceImpl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,14 +13,24 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 public class InventoryServiceTest {
 
-  private InventoryService inventoryService;
+  @InjectMocks
+  private InventoryServiceImpl inventoryService;
+  @Mock
+  private InventoryRepository inventoryRepository;
 
   @BeforeEach
-  public  void setup(){
-    inventoryService = new InventoryServiceImpl();
+  public void initMocks(){
+    MockitoAnnotations.initMocks(this);
+    Mockito.doNothing().when(inventoryRepository).saveItems(any(List.class),any(String.class));
+    Mockito.when(inventoryRepository.fetchItems(any(SearchItem.class))).thenReturn(getItemList());
+
   }
 
   @Test
@@ -32,6 +45,23 @@ public class InventoryServiceTest {
     Assertions.assertThrows(BusinessException.class, () ->inventoryService.saveItems(itemList, ""));
 
   }
+
+  @Test
+  public void fetchItem_checkIfThrowExceptionWhenSearchItemIsNull(){
+    SearchItem searchItem= new SearchItem();
+    Assertions.assertThrows(BusinessException.class, () ->inventoryService.fetchItems(searchItem));
+
+  }
+
+  @Test
+  public void fetchItem_checkIfFetchItemSuccessfully(){
+    SearchItem searchItem= new SearchItem();
+    searchItem.setColor("black");
+    List<Item> items = inventoryService.fetchItems(searchItem);
+    Assertions.assertEquals(items.size(),1);
+
+  }
+
   private List<Item> getItemList() {
     List<Item> itemList = new ArrayList<>();
     Item item = new Item();
