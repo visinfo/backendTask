@@ -57,7 +57,11 @@ For this challenge you don't need to cover:
   
     . Use http://localhost:8080/swagger-ui.html#/  for API Documentation and Execution 
         
-     
+   
+ Build With Docker 
+ 
+    . docker build -t demo/app   .
+    
 
 
 
