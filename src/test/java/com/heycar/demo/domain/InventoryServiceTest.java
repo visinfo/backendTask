@@ -1,11 +1,13 @@
 package com.heycar.demo.domain;
 
+import com.heycar.demo.domain.exception.BusinessException;
 import com.heycar.demo.domain.model.Item;
 import com.heycar.demo.domain.service.InventoryService;
 import com.heycar.demo.domain.service.InventoryServiceImpl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +26,12 @@ public class InventoryServiceTest {
     inventoryService.saveItems(itemList, "121212");
 
   }
+  @Test
+  public void saveItem_checkIfThrowExceptionWhenDealerIdIsBlank(){
+    List<Item> itemList = getItemList();
+    Assertions.assertThrows(BusinessException.class, () ->inventoryService.saveItems(itemList, ""));
 
+  }
   private List<Item> getItemList() {
     List<Item> itemList = new ArrayList<>();
     Item item = new Item();
